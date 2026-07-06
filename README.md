@@ -1,7 +1,5 @@
 # Infectious Patch
 
-Small companion patch for **Infectious - Zombie Apocalypse**.
-
 Fixes the broken `enableLootdrops` gamerule by suppressing the Lootdrop announcement (`tellraw`) and sound when loot drops are disabled.
 
 ## Building

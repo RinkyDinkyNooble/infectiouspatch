@@ -1,6 +1,6 @@
 # Infectious Patch
 
-Fixes the broken `enableLootdrops` gamerule by suppressing the Lootdrop announcement (`tellraw`) and sound when loot drops are disabled.
+Fixes the broken `enableLootdrops` gamerule by suppressing the Lootdrop announcement (`tellraw`) and sound when loot drops are disabled. This patch also disables all hardcoded item drops from every Infectious entity on death, so loot can be redefined cleanly through LootJS instead.
 
 ## Building
 

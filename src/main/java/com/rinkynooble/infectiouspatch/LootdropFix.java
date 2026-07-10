@@ -21,6 +21,7 @@ public class LootdropFix {
 
     public LootdropFix() {
         MinecraftForge.EVENT_BUS.register(this);
+        new EntityDropSuppressor();
     }
 
     private static boolean isLootdropAnnouncementCommand(String lowerCaseInput) {

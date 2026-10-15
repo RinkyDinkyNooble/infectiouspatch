@@ -1,0 +1,1 @@
+Fixes Infectious' Lootdrop gamerule, lets loot tables decide its drops, and keeps zombies from spawners and commands in lit places.

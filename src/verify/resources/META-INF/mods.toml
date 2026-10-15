@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="0BSD"
+
+[[mods]]
+modId="infectiouspatch_verify"
+version="0.0.0"
+displayName="Infectious Patch: dev checks"
+description='''Dev-only spawn checks for Infectious Patch. Runs with or without the patch. Never shipped.'''
+
+[[dependencies.infectiouspatch_verify]]
+    modId="infectious"
+    mandatory=true
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"

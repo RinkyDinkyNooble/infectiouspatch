@@ -1,8 +1,8 @@
 plugins {
     id 'eclipse'
     id 'idea'
-    id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = mod_version
@@ -20,47 +20,97 @@ minecraft {
     mappings channel: 'official', version: minecraft_version
 
     runs {
-        client {
+        configureEach {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
+            property 'forge.logging.console.level', 'info'
             mods {
                 "${mod_id}" {
                     source sourceSets.main
                 }
             }
         }
+        client {
+        }
         server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+            args '--nogui'
         }
     }
 }
 
-dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly files('libs/Infectious-forge-1_20_1-1_7.jar')
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
 }
 
-// Standard resource token replacement so mods.toml gets the real version number
+// Dev-only checks (src/verify), built into their own small mod by verifyJar. Never shipped.
+sourceSets {
+    verify {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+    }
+}
+
+repositories {
+    // The Infectious jar is read from libs/ (see README).
+    flatDir { dir 'libs' }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    // Compiled against, and loaded in the dev runs. Never packed into this mod's jar.
+    implementation fg.deobf("local:${infectious_jar}")
+}
+
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
             minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
             forge_version: forge_version, forge_version_range: forge_version_range,
             loader_version_range: loader_version_range,
+            infectious_version_range: infectious_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license,
             mod_version: mod_version, mod_authors: mod_authors, mod_description: mod_description,
+            mod_url: mod_url, mod_issues: mod_issues,
     ]
     inputs.properties replaceProperties
     filesMatching(['META-INF/mods.toml']) {
         expand replaceProperties + [project: project]
     }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.version,
+                'Implementation-Vendor'   : mod_authors,
+                'MixinConfigs'            : "${mod_id}.mixins.json",
+        ])
+    }
+    // Ship the license inside the jar too.
+    from('LICENSE') {
+        rename { "LICENSE_${mod_id}" }
+    }
+    finalizedBy 'reobfJar'
+}
+
+// The spawn check mod for the headless server test (see research/HANDOFF.md).
+tasks.register('verifyJar', Jar) {
+    from sourceSets.verify.output
+    archiveClassifier = 'verify'
+    // The mixin plugin adds this mod's refmap and mixin config to every jar; the check mod has neither,
+    // so it can also run without the patch.
+    exclude "${mod_id}.refmap.json"
+    doFirst { manifest.attributes.remove('MixinConfigs') }
+    finalizedBy 'reobfVerifyJar'
+}
+
+reobf {
+    verifyJar {}
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -1,32 +1,36 @@
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
-issueTrackerURL="https://github.com/RinkyDinkyNooble/infectiouspatch/issues"
+issueTrackerURL="${mod_issues}"
 
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
+displayURL="${mod_url}"
 authors="${mod_authors}"
+credits="Infectious is made by Zcoper. This is an unofficial patch for it."
+# Everything it changes runs on the server, so a client and server don't have to match.
+displayTest="IGNORE_ALL_VERSION"
 description='''${mod_description}'''
 
-[[dependencies.infectiouspatch]]
+[[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
     versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.infectiouspatch]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.infectiouspatch]]
+[[dependencies.${mod_id}]]
     modId="infectious"
     mandatory=true
-    versionRange="[1.0,)"
+    versionRange="${infectious_version_range}"
     ordering="AFTER"
     side="BOTH"

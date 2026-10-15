@@ -1,4 +1,29 @@
-/.gradle
-/.vscode
+# Gradle
+.gradle/
+build/
+
+# Forge dev runs
+run/
+
+# The Infectious jar goes here (see README)
 /libs
-/build
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+bin/
+out/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Private notes
+/research

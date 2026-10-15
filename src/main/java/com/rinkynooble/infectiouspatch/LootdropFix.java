@@ -7,12 +7,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod(LootdropFix.MODID)
 public class LootdropFix {
-
-    public static final String MODID = "infectiouspatch";
 
     private static final String[] MATCH_FRAGMENTS = {
         "will land!",
@@ -21,7 +17,6 @@ public class LootdropFix {
 
     public LootdropFix() {
         MinecraftForge.EVENT_BUS.register(this);
-        new EntityDropSuppressor();
     }
 
     private static boolean isLootdropAnnouncementCommand(String lowerCaseInput) {

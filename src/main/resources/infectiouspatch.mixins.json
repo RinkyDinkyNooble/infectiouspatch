@@ -1,0 +1,15 @@
+{
+  "required": false,
+  "minVersion": "0.8.5",
+  "package": "com.rinkynooble.infectiouspatch.mixin",
+  "plugin": "com.rinkynooble.infectiouspatch.MixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "infectiouspatch.refmap.json",
+  "mixins": [
+    "LightRemovalMixin",
+    "ZombieHordeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}
